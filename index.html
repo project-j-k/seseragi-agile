@@ -1,0 +1,735 @@
+<title>SESERAGI AGILE(せせらぎアジャイル)— 涸れない開発のための水循環モデル</title>
+<meta name="description" content="ウォーターフォールでもなく、淀んだアジャイルでもなく。源兵衛川の水循環構造から着想を得た、涸れない開発の思想「SESERAGI AGILE」。">
+<style>
+  :root{
+    --ink:#0b2b33;
+    --ink-soft:#3c5a63;
+    --paper:#f4faf9;
+    --paper-alt:#e9f4f2;
+    --line:#cfe3e0;
+    --deep:#08415c;
+    --teal:#1c7293;
+    --aqua:#3aaed8;
+    --aqua-soft:#a1e3e0;
+    --green:#4f9d69;
+    --gold:#c9a24b;
+    --card:#ffffff;
+    --shadow:0 12px 32px -18px rgba(8,65,92,.35);
+    --radius:18px;
+    --maxw:960px;
+  }
+  :root[data-theme="dark"]{
+    --ink:#e7f3f2;
+    --ink-soft:#aecdd0;
+    --paper:#081a20;
+    --paper-alt:#0c242c;
+    --line:#183842;
+    --deep:#bfe6f5;
+    --teal:#7fc3dd;
+    --aqua:#67c7e6;
+    --aqua-soft:#1c4a52;
+    --green:#8bd1a3;
+    --gold:#e0bd6f;
+    --card:#0e2830;
+    --shadow:0 12px 32px -18px rgba(0,0,0,.6);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#e7f3f2;
+      --ink-soft:#aecdd0;
+      --paper:#081a20;
+      --paper-alt:#0c242c;
+      --line:#183842;
+      --deep:#bfe6f5;
+      --teal:#7fc3dd;
+      --aqua:#67c7e6;
+      --aqua-soft:#1c4a52;
+      --green:#8bd1a3;
+      --gold:#e0bd6f;
+      --card:#0e2830;
+      --shadow:0 12px 32px -18px rgba(0,0,0,.6);
+    }
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.85;
+    overflow-x:hidden;
+  }
+  img,svg{max-width:100%;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  a{color:var(--teal);}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding:96px 0 64px;
+    background:
+      radial-gradient(1200px 500px at 20% -10%, var(--aqua-soft) 0%, transparent 60%),
+      linear-gradient(180deg, var(--paper-alt), var(--paper));
+    overflow:hidden;
+  }
+  .hero-waves{
+    position:absolute; left:0; right:0; bottom:-2px; height:120px;
+    display:block;
+  }
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:13px; letter-spacing:.14em; font-weight:700;
+    color:var(--teal); text-transform:uppercase;
+    background:var(--card); border:1px solid var(--line);
+    padding:6px 14px; border-radius:999px; box-shadow:var(--shadow);
+  }
+  .hero h1{
+    font-size:clamp(2.2rem, 6vw, 3.6rem);
+    line-height:1.15; margin:28px 0 8px; letter-spacing:.01em;
+    color:var(--deep);
+  }
+  .hero h1 small{
+    display:block; font-size:.42em; font-weight:600; color:var(--ink-soft);
+    letter-spacing:.06em; margin-top:10px;
+  }
+  .hero p.lead{
+    font-size:1.15rem; color:var(--ink-soft); max-width:640px; margin:20px 0 0;
+  }
+  .badge-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:32px;}
+  .badge{
+    font-size:13px; background:var(--card); border:1px solid var(--line);
+    padding:8px 14px; border-radius:10px; color:var(--ink-soft);
+  }
+
+  /* ---------- generic section ---------- */
+  section{padding:72px 0;}
+  h2.section-title{
+    font-size:clamp(1.5rem,3.4vw,2.1rem);
+    color:var(--deep); margin:0 0 10px;
+    display:flex; align-items:center; gap:12px;
+  }
+  h2.section-title::before{
+    content:""; width:34px; height:3px; background:var(--gold); display:inline-block; border-radius:2px;
+  }
+  .section-sub{color:var(--ink-soft); margin:0 0 40px; max-width:640px;}
+  .divider{
+    height:64px; margin:0; display:block;
+  }
+
+  /* ---------- 対比カード ---------- */
+  .compare{
+    display:grid; grid-template-columns:1fr 1fr; gap:20px;
+  }
+  @media (max-width:720px){ .compare{grid-template-columns:1fr;} }
+  .compare .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:26px 24px; box-shadow:var(--shadow);
+  }
+  .compare .card h3{margin:0 0 6px; font-size:1.05rem; color:var(--ink);}
+  .compare .card .tag{font-size:12px; color:var(--ink-soft); letter-spacing:.06em;}
+  .compare .card ul{margin:16px 0 0; padding-left:1.1em; color:var(--ink-soft); font-size:.95rem;}
+  .compare .card li{margin-bottom:8px;}
+  .compare .card.mid{
+    border-color:var(--aqua);
+    background:linear-gradient(180deg, var(--card), var(--paper-alt));
+  }
+
+  /* ---------- 定義ブロック ---------- */
+  .definition{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:32px; box-shadow:var(--shadow); position:relative;
+  }
+  .definition .term{
+    font-size:1.6rem; font-weight:800; color:var(--deep); letter-spacing:.02em;
+  }
+  .definition .kana{color:var(--ink-soft); font-size:.95rem; margin-top:2px;}
+  .definition p{margin:16px 0 0; color:var(--ink);}
+
+  /* ---------- ケーススタディ ---------- */
+  .river-flow{
+    border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
+    background:var(--card); box-shadow:var(--shadow);
+  }
+  .river-step{
+    display:grid; grid-template-columns:64px 1fr; gap:18px;
+    padding:22px 24px; border-bottom:1px solid var(--line);
+    align-items:start;
+  }
+  .river-step:last-child{border-bottom:none;}
+  .river-step .num{
+    width:44px;height:44px;border-radius:50%;
+    background:linear-gradient(160deg, var(--aqua), var(--teal));
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:1.05rem; box-shadow:var(--shadow);
+  }
+  .river-step h4{margin:2px 0 6px; color:var(--ink);}
+  .river-step p{margin:0; color:var(--ink-soft); font-size:.95rem;}
+  .fact-note{
+    margin-top:36px; padding:18px 20px; border-left:3px solid var(--gold);
+    background:var(--paper-alt); border-radius:0 12px 12px 0; font-size:.9rem; color:var(--ink-soft);
+  }
+
+  /* ---------- 原則 ---------- */
+  .principles{display:grid; grid-template-columns:repeat(2,1fr); gap:20px;}
+  @media (max-width:720px){ .principles{grid-template-columns:1fr;} }
+  .principle{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:26px; box-shadow:var(--shadow); position:relative; padding-top:52px;
+  }
+  .principle .pnum{
+    position:absolute; top:-14px; left:22px;
+    background:var(--deep); color:#fff; font-size:12px; font-weight:700;
+    padding:6px 12px; border-radius:999px; letter-spacing:.08em;
+  }
+  .principle h3{margin:0 0 8px; font-size:1.05rem; color:var(--ink);}
+  .principle .jp{font-size:.82rem; color:var(--gold); font-weight:700; letter-spacing:.04em; margin-bottom:4px;}
+  .principle p{margin:0; color:var(--ink-soft); font-size:.92rem;}
+
+  /* ---------- 使用駆動 ---------- */
+  .loop-diagram{
+    display:flex; align-items:center; justify-content:flex-start; gap:0;
+    margin:36px 0; overflow-x:auto; padding-bottom:6px;
+  }
+  .loop-node{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:12px 13px; font-size:.78rem; color:var(--ink); box-shadow:var(--shadow);
+    text-align:center; white-space:nowrap; flex:0 0 auto;
+  }
+  .loop-node small{font-size:.76em; display:block; margin-top:2px;}
+  .loop-arrow{color:var(--aqua); font-size:1.1rem; padding:0 6px; flex:0 0 auto;}
+  @media (min-width:760px){
+    .loop-diagram{justify-content:center;}
+  }
+  @media (max-width:720px){
+    .loop-diagram{flex-direction:column; overflow-x:visible;}
+    .loop-node{white-space:normal;}
+    .loop-arrow{transform:rotate(90deg);}
+  }
+
+  /* ---------- KAIZEN対比 ---------- */
+  .kaizen-table{width:100%; border-collapse:collapse; margin-top:24px; font-size:.92rem;}
+  .kaizen-table th,.kaizen-table td{
+    text-align:left; padding:14px 16px; border-bottom:1px solid var(--line); vertical-align:top;
+  }
+  .kaizen-table th{color:var(--ink-soft); font-weight:700; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase;}
+  .kaizen-table td strong{color:var(--deep);}
+
+  /* ---------- CTA ---------- */
+  .cta{
+    text-align:center; background:linear-gradient(160deg, var(--deep), var(--teal));
+    border-radius:24px; padding:56px 32px; color:#fff;
+  }
+  .cta h2{margin:0 0 12px; font-size:clamp(1.4rem,3vw,2rem);}
+  .cta p{color:#dff2f5; max-width:520px; margin:0 auto 8px;}
+  .cta .motto{
+    display:inline-block; margin-top:24px; font-size:.9rem; letter-spacing:.1em;
+    border:1px solid rgba(255,255,255,.35); padding:10px 20px; border-radius:999px;
+  }
+
+  /* ---------- 出典 ---------- */
+  .sources{font-size:.85rem; color:var(--ink-soft);}
+  .sources ol{padding-left:1.2em;}
+  .sources li{margin-bottom:8px;}
+  .disclaimer{
+    font-size:.82rem; color:var(--ink-soft); border-top:1px solid var(--line);
+    margin-top:20px; padding-top:20px;
+  }
+
+  footer{
+    padding:40px 0 60px; text-align:center; color:var(--ink-soft); font-size:.85rem;
+  }
+
+  ::selection{background:var(--aqua-soft);}
+  rt{font-size:.55em; color:var(--gold); font-weight:700;}
+</style>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker">a proposed development philosophy</span>
+    <h1>SESERAGI AGILE
+      <small>せせらぎアジャイル — <ruby>涸<rt>か</rt></ruby>れないチームのための水循環モデル</small>
+    </h1>
+    <p class="lead">
+      滝は一度落ちたら、二度と上がらない。<br>
+      淀んだ流れは、いつか腐る。<br>
+      源兵衛川は、下流の湧水をポンプで汲み上げ、姿を変えて上流に還すことで、
+      100年近く涸れずに流れ続けている。<br>
+      その構造を、開発のリズムに写す。
+    </p>
+    <div class="badge-row">
+      <span class="badge">🌊 ウォーターフォールへの対抗概念ではなく、補完構造</span>
+      <span class="badge">💧 仕様駆動開発(SDD)× アジャイルの融合</span>
+      <span class="badge">📜 KAIZENに続く、日本発の開発思想(提案)</span>
+    </div>
+  </div>
+  <svg class="hero-waves" viewBox="0 0 1440 120" preserveAspectRatio="none">
+    <path fill="var(--aqua-soft)" opacity="0.6" d="M0,64 C240,110 480,20 720,56 C960,92 1200,30 1440,64 L1440,120 L0,120 Z"/>
+    <path fill="var(--paper)" d="M0,90 C240,50 480,120 720,80 C960,40 1200,110 1440,80 L1440,120 L0,120 Z"/>
+  </svg>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ 課題提起 ============ -->
+  <section>
+    <h2 class="section-title">なぜ、いまさら川の話をするのか</h2>
+    <p class="section-sub">
+      ウォーターフォールとアジャイルは、いつも「対立概念」として語られる。だが両方とも、実は水の比喩として不完全だ。
+    </p>
+
+    <div class="compare">
+      <div class="card">
+        <div class="tag">WATERFALL</div>
+        <h3>滝 — 一度落ちたら、戻れない</h3>
+        <ul>
+          <li>要件定義 → 設計 → 実装 → テスト → リリース、と高いところから低いところへ一方向に流れ落ちる。</li>
+          <li>上流(経営・企画)から滝壺を覗き込んでも、舞い上がる水飛沫しか見えない——高いところにいるほど、現場で実際に何が起きているかは見えなくなる。</li>
+          <li>下流(本番・ユーザー)で見つかった問題は、上流(設計)に戻すコストが高すぎて、事実上戻せない。</li>
+          <li>水は使われて、流れ落ちて、そこで終わる。</li>
+        </ul>
+      </div>
+      <div class="card mid">
+        <div class="tag">よくある「アジャイル」</div>
+        <h3>水たまり — かき混ぜるが、外に出ない</h3>
+        <ul>
+          <li>スプリントを繰り返すこと自体が目的化し、外の川(本番・顧客)へ実際にリリースして合流させることが後回しになる。水面だけが忙しくかき混ぜられている状態。</li>
+          <li>「ふりかえり」や「カイゼン」が、同じチーム・同じ組織の中だけで閉じ、部分最適に陥る。</li>
+          <li>反復はしているのに、外から新しい水(本番データ・顧客の現実)が入らず、静かに淀む。</li>
+          <li>湖畔では上司が魚釣りに夢中——見ているのは水たまり全体の水質ではなく、自分の釣果(四半期の評価・KPI)だけ。</li>
+        </ul>
+      </div>
+      <div class="card" style="grid-column:1/-1;">
+        <div class="tag">SESERAGI AGILE(提案)</div>
+        <h3>せせらぎ — 汲み上げて、姿を変えて、また流れる</h3>
+        <ul>
+          <li>下流(本番・ユーザーの実利用)で得られた"水"を、意図的にポンプアップして上流(企画・設計)に戻す。</li>
+          <li>ただし、同じ水をそのまま循環させるのではない。一度、目的に応じて姿を変えてから次に渡す(後述:カスケード再利用の原則)。</li>
+          <li>激しい滝でも、閉じた水たまりでもなく、絶えず心地よく流れ続ける「小川」のリズムを保つ。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 定義 ============ -->
+  <section>
+    <div class="definition">
+      <div class="term">SESERAGI AGILE(せせらぎアジャイル)</div>
+      <div class="kana">名詞・開発思想 / せせらぎ・アジャイル</div>
+      <p>
+        開発の成果物とフィードバックを、滝のように一度きりで流し捨てるのでも、閉じた組織やチームの中だけで循環させるのでもなく、
+        <strong style="color:var(--deep)">「下流(利用の現場)から意図的に汲み上げ、価値の姿を変えながら上流(企画・設計)へ還流させ続ける」</strong>
+        ことで、チームと開発対象を涸らさずに、小さな流れを反復し続ける開発のあり方。
+      </p>
+      <p>
+        源兵衛川(静岡県三島市)が、自然に任せれば涸れるはずの流れを、人の手による「汲み上げ」と「使い継ぎ」によって
+        100年近く涸らさずに維持してきた構造から着想を得ている。
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ ケーススタディ ============ -->
+  <section>
+    <h2 class="section-title">源兵衛川という一次情報</h2>
+    <p class="section-sub">
+      「下流の水を汲み上げて上流に戻している」という話は、細部を正確にすると次のような構造だった。
+      思いつきを検証するために、公的機関・事業者・NPOの一次情報を確認している。
+    </p>
+
+    <div class="river-flow">
+      <div class="river-step">
+        <div class="num">1</div>
+        <div>
+          <h4>湧水 — 涸れかけた"元の水源"</h4>
+          <p>
+            源兵衛川はもともと、富士山の伏流水が三島溶岩流の末端(楽寿園・小浜池)から湧き出す水を水源としていた。
+            昭和30年代後半からの都市化と地下水利用の増加で地下水位が低下し、1962年頃から小浜池の湧水は涸れるのが常態化。
+            川はドブ川同然になった。
+          </p>
+        </div>
+      </div>
+      <div class="river-step">
+        <div class="num">2</div>
+        <div>
+          <h4>汲み上げ — 同じ水系の"下流端"から</h4>
+          <p>
+            源兵衛川自身の下流ではなく、同じ富士山系地下水の下流にあたる柿田川の湧水を、
+            静岡県営の工業用水道がポンプで汲み上げて送水している。
+          </p>
+        </div>
+      </div>
+      <div class="river-step">
+        <div class="num">3</div>
+        <div>
+          <h4>一次利用 — 姿を変える</h4>
+          <p>
+            三島駅北の東レ三島工場が、この水を工業用水として購入し、薬品に触れない一次冷却水(温度調整のみ)として一度使用する。
+            水質はそのまま、役割だけが「湧水」から「使用済みの清浄な水」に変わる。
+          </p>
+        </div>
+      </div>
+      <div class="river-step">
+        <div class="num">4</div>
+        <div>
+          <h4>還流 — 最上流へ戻す</h4>
+          <p>
+            使用後の水は既設の排水管を通り、源兵衛川の最上流部にあたる楽寿園から放流される。
+            1992年1月30日開始。導水量は当初の冬季700㎥/hから、現在は夏季1,500㎥/h・冬季900㎥/hまで拡大している。
+          </p>
+        </div>
+      </div>
+      <div class="river-step">
+        <div class="num">5</div>
+        <div>
+          <h4>使い継ぎ — さらに下流の農業用水へ</h4>
+          <p>
+            源兵衛川を流れた水は、下流の中郷温水池で日光に温められ、農業用水として再び使われてから狩野川水系へ合流する。
+            一つの水が、工業 → 環境・親水 → 農業と、用途を変えながら価値を使い継いでいく。
+          </p>
+        </div>
+      </div>
+      <div class="river-step">
+        <div class="num">6</div>
+        <div>
+          <h4>調整役 — 誰が流れを設計したか</h4>
+          <p>
+            1992年、8つの市民団体が集まり「グラウンドワーク三島」が発足。行政・企業・住民という利害の異なる三者の間を調整し、
+            日本初のグラウンドワーク手法で8ゾーンの親水整備を実現した。結果、ホトケドジョウやミシマバイカモ、ゲンジボタルが復活し、
+            2016年には世界かんがい施設遺産に、2025年度にはグッドデザイン金賞を受賞している。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fact-note">
+      <strong>正確を期すために:</strong> これは閉じた「循環」ではなく、「多段カスケード再利用」である。同じ水が同じ場所をぐるぐる回っているのではなく、
+      湧水 → 工業 → 環境 → 農業へと、一方向に用途を変えながら"使い継がれて"いる。また環境省の資料は
+      「この放流が恒久的に継続できる保証はない」とも明記しており、善意と協定の上に成り立つ、脆さも抱えた仕組みであることも付記しておく。
+    </div>
+  </section>
+
+  <!-- ============ 原則 ============ -->
+  <section>
+    <h2 class="section-title">せせらぎアジャイル・4つの原則</h2>
+    <p class="section-sub">源兵衛川の構造を、そのまま開発チームの原則に写像する。</p>
+
+    <div class="principles">
+      <div class="principle">
+        <span class="pnum">1</span>
+        <div class="jp">意図的還流の原則</div>
+        <h3>放っておけば、涸れる</h3>
+        <p>
+          フィードバックは自然発生しない。小浜池が黙っていて涸れたように、ユーザーの声・運用データ・障害情報も、
+          意図的な「汲み上げポンプ」(計装、分析基盤、定例のユーザーインタビュー)を仕込まない限り、上流には戻ってこない。
+        </p>
+      </div>
+      <div class="principle">
+        <span class="pnum">2</span>
+        <div class="jp">カスケード再利用の原則</div>
+        <h3>一度で使い切らず、姿を変えて渡す</h3>
+        <p>
+          ふりかえりやカイゼンの学びは、そのチームのスプリントだけで消費して終わりにしない。冷却水が親水用水になり農業用水になるように、
+          知見はドキュメント化・抽象化され、他チームや次期プロジェクトの"用水"として使い継がれる。
+        </p>
+      </div>
+      <div class="principle">
+        <span class="pnum">3</span>
+        <div class="jp">調整役の原則</div>
+        <h3>流れは、誰かが設計しないと生まれない</h3>
+        <p>
+          行政・企業・住民の間にグラウンドワーク三島が立ったように、経営・開発・利用者の間には、
+          利害を超えて水路を引く調整役(PdM、スクラムマスター、あるいはプラットフォームチーム)が要る。
+          個々の部署・チームが自分たちの利害(部分最適)だけを追いかければ、全体の水循環は成立しない。
+        </p>
+      </div>
+      <div class="principle">
+        <span class="pnum">4</span>
+        <div class="jp">持続可能な流量の原則</div>
+        <h3>滝のように激しく、ではなく</h3>
+        <p>
+          一気に大量のデータや要求を落とすと、下流(チーム)が氾濫する。
+          "せせらぎ"の心地よさは、無理のない一定の流量が絶えず続くことにある。持続可能なペースは、量ではなくリズムの設計問題。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TPSという土台 ============ -->
+  <section>
+    <h2 class="section-title">全体最適という土台 — トヨタ生産方式(TPS)</h2>
+    <p class="section-sub">
+      KAIZEN(改善)は、しばしば「小さな改善を積み重ねる態度」として海外に紹介される。だがトヨタ生産方式(TPS)における本来の狙いは、
+      一工程・一チームの部分最適ではなく、モノと情報の流れ全体を対象にした「全体最適」にある。
+      SESERAGI AGILEは、この全体最適という抽象的な目的を、"川"という具体的な構造に翻訳する試みでもある。
+    </p>
+
+    <div class="principles">
+      <div class="principle">
+        <span class="pnum">JIT</span>
+        <div class="jp">ジャストインタイム</div>
+        <h3>必要な水を、必要な時に、必要な量だけ</h3>
+        <p>
+          源兵衛川の導水量は季節で調整されている(夏季1,500㎥/h・冬季900㎥/h)。多すぎれば氾濫し、少なすぎれば涸れる。
+          「造りすぎのムダ」は、水においても開発においても、最大のムダである。
+        </p>
+      </div>
+      <div class="principle">
+        <span class="pnum">自働化</span>
+        <div class="jp">アンドン(異常の可視化)</div>
+        <h3>異常が起きたら、流れを止めて知らせる</h3>
+        <p>
+          2017年、源兵衛川で水位が急低下する騒ぎが起きたが、原因は放流停止ではなく上流水門の調整不良で、翌日には復旧している。
+          異常を検知し、止め、直す仕組みが機能した例である。
+        </p>
+      </div>
+      <div class="principle">
+        <span class="pnum">後工程</span>
+        <div class="jp">後工程はお客様</div>
+        <h3>下流を、顧客とみなす</h3>
+        <p>
+          東レが使う冷却水は、下流の源兵衛川の生態系や、さらに下流で農業用水として使う人々にまで影響する。
+          次工程を顧客とみなす発想がなければ、水質・水温への配慮は生まれない。
+        </p>
+      </div>
+      <div class="principle">
+        <span class="pnum">全体最適</span>
+        <div class="jp">部分最適の寄せ集めではない</div>
+        <h3>個々の利害を、全体の設計に組み替える</h3>
+        <p>
+          行政・企業・住民がそれぞれの利害(部分最適)だけを見ていたら、この還流構造は生まれなかった。
+          グラウンドワーク三島という調整役が、地域の水系全体を一つのシステムとして設計し直したからこそ実現している。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ アジャイル宣言との合流 ============ -->
+  <section>
+    <h2 class="section-title">アジャイル宣言に、もともと流れていたもの</h2>
+    <p class="section-sub">
+      SESERAGI AGILEは、外部から新しい思想を持ち込むものではない。アジャイル宣言(2001年)そのものの中に、
+      日本発のリーン・TPSの思想がすでに合流していたことを、"川"のメタファーで改めて可視化するものである。
+    </p>
+
+    <div class="definition" style="margin-bottom:32px;">
+      <p style="margin-top:0;">
+        アジャイル宣言を起草した17人は、XP・Scrum・DSDM・Crystalなど複数の源流が合わさって生まれたもので、
+        「TPSを研究してアジャイル宣言を書いた」という単純な直線的因果ではない。だが、リーンの思想は少なくとも2つの支流を通じて合流している。
+      </p>
+      <p>
+        ひとつは、Jeff Sutherlandらが1990年代にスクラムを構築する際の着想源にした、野中郁次郎・竹内弘高の論文
+        「The New New Product Development Game」(Harvard Business Review, 1986)。富士ゼロックス・キヤノン・ホンダ・NEC・エプソン・
+        ブラザー・3M・HPの新製品開発チームを研究したもので(トヨタそのものを直接研究した論文ではない)、
+        "ラグビーのスクラム"の比喩からそのままScrumという名前が生まれた。
+      </p>
+      <p style="margin-bottom:0;">
+        もうひとつは、Mary & Tom Poppendieck夫妻による『Lean Software Development』(2003)。トヨタ生産方式の考え方を
+        直接ソフトウェア開発に翻訳し、アジャイル界隈で広く読まれた。2020年版スクラムガイドは冒頭で
+        "Scrum is founded on empiricism and lean thinking"(スクラムは経験主義とリーン思考に基づく)と明記している。
+        つまりリーンの思想は"発明"されたのではなく、複数の支流から"合流"してアジャイルに流れ込んだ——せせらぎアジャイルが描く
+        カスケード構造と、実はよく似た形をしている。
+      </p>
+    </div>
+
+    <table class="kaizen-table">
+      <thead>
+        <tr><th>アジャイル宣言(公式訳)</th><th>リーン/TPSの対応</th><th>SESERAGI AGILEの原則</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>価値観「契約交渉よりも顧客との協調を」</td>
+          <td>後工程はお客様</td>
+          <td><strong>調整役の原則</strong> — 利害を超えて協調の水路を引く</td>
+        </tr>
+        <tr>
+          <td>原則8「持続可能な開発。一定のペースを継続的に維持する」</td>
+          <td>平準化(ムラの排除)</td>
+          <td><strong>持続可能な流量の原則</strong> — 涸れさせず、溢れさせず</td>
+        </tr>
+        <tr>
+          <td>原則10「シンプルさ(ムダなく作れる量を最大限にすること)が本質」</td>
+          <td>ムダの排除</td>
+          <td><strong>カスケード再利用の原則</strong> — 一滴も使い捨てない</td>
+        </tr>
+        <tr>
+          <td>原則12「定期的にふりかえり、やり方を最適に調整する」</td>
+          <td>カイゼン</td>
+          <td><strong>意図的還流の原則</strong> — ふりかえりは、下流の水を上流へ戻すポンプそのもの</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="fact-note">
+      <strong>正確を期すために:</strong> 「TPSがアジャイル宣言を生んだ」という直接因果を主張するものではない。
+      起草者17人の思想的源流にリーン・TPSを直接挙げた記録はなく、agilemanifesto.org公式の経緯にもトヨタや野中・竹内への言及はない。
+      ここで示せるのは、スクラムという一つの支流を通じてリーン思考がアジャイルに合流し、2020年版スクラムガイドで明文化されている、という事実である。
+    </div>
+  </section>
+
+  <!-- ============ SECIモデルとの響き合い ============ -->
+  <section>
+    <h2 class="section-title">補論:SECIモデルとの響き合い</h2>
+    <p class="section-sub">
+      スクラムの語源となった1986年論文の著者、野中郁次郎と竹内弘高は、9年後の『知識創造企業』(1995)でSECIモデルを提唱した。
+      スクラムの共同創始者Jeff Sutherlandは、講演資料「The Roots of Scrum」(2005)で二人を"Godfathers of Scrum"と呼び、
+      この本も参照文献に挙げている。せせらぎアジャイルの水のメタファーは、この知識創造理論と部分的に響き合う。
+    </p>
+
+    <table class="kaizen-table">
+      <thead>
+        <tr><th>SECIモデル</th><th>せせらぎアジャイル</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>知識は暗黙知⇄形式知と姿を変えて受け継がれる</td>
+          <td><strong>カスケード再利用</strong> — 姿を変えて次に渡す</td>
+        </tr>
+        <tr>
+          <td>表出化 — 暗黙の声を言葉にして共有する</td>
+          <td><strong>意図的還流</strong> — 下流の声を汲み上げ上流へ戻す</td>
+        </tr>
+        <tr>
+          <td>場 — 知識変換が起こる共有文脈を意図的に用意する(Nonaka &amp; Konno, 1998)</td>
+          <td><strong>調整役</strong> — グラウンドワーク三島が出会いの場を作った</td>
+        </tr>
+        <tr>
+          <td>スパイラル — 同じ円を回らず、個人→集団→組織へとレベルを上げて前進する</td>
+          <td><strong>カスケード</strong> — 循環ではなく、姿を変えて前進する</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="fact-note">
+      <strong>正直な注記:</strong> SECIは組織の知識創造理論であり、水循環そのものの記述ではない。上の対応は着想レベルの類比にとどまる。
+      水の4段階とSECIの4プロセスは1対1に対応しない。また「内面化」(形式知が再び暗黙知に還る)に対応する水の要素は源兵衛川にはない
+      ——水は狩野川水系へ合流するのであり、地下水に還る事実は確認されていない。強いて言えば、スパイラルを描くのは水ではなく、
+      この川に30年以上関わり続けてきた人々の実践のほうである。
+    </div>
+  </section>
+
+  <!-- ============ 仕様駆動開発(SDD)との融合 ============ -->
+  <section>
+    <h2 class="section-title">仕様駆動開発(SDD)との融合ロジック</h2>
+    <p class="section-sub">
+      「仕様駆動開発(Specification-Driven Development, SDD)」— 仕様書そのものを一次成果物とし、
+      コードはAIエージェントがその仕様から都度生成する実装物とみなす考え方 — は、源兵衛川の構造とほぼ同型である。
+    </p>
+
+    <div class="loop-diagram">
+      <div class="loop-node">仕様(Spec)<br><small style="color:var(--ink-soft)">最上流の水源(小浜池)</small></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">AIによる実装生成<br><small style="color:var(--ink-soft)">一次利用(工業冷却)</small></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">実行・テスト・本番運用<br><small style="color:var(--ink-soft)">下流の湧水(柿田川)</small></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">乖離の検証<br><small style="color:var(--ink-soft)">ポンプ設備</small></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">仕様(Spec)を更新<br><small style="color:var(--ink-soft)">最上流への放流</small></div>
+    </div>
+
+    <p>
+      SDDにおいて仕様書は、源兵衛川でいう小浜池にあたる「最上流の水源」だ。だが小浜池が都市化の中で黙って涸れていったように、
+      仕様書もまた「書いたきり」では現実との差分の中で涸れていく。AIエージェントは仕様から実装を生成する速度が速いぶん、
+      実装と本番挙動が仕様から静かに乖離していくリスクも同じだけ速い。
+    </p>
+    <p>
+      だからこそ、実行結果・テストの失敗・本番でのふるまいという"下流の湧水"を、意図的にポンプアップして仕様書自体に汲み戻す仕組みが要る。
+      東レが柿田川の水をそのまま流さず一次冷却水として使ってから放流するように、実行結果もまた検証というワンクッションを経て、
+      初めて仕様書を潤す清浄な水になる。生のログをそのまま仕様に書き足すのは、氾濫であって、せせらぎではない。
+      仕様(Spec)→ 実装 → 実行 → 検証 → 仕様更新、という還流があって初めて、SDDは「一度書いたら終わりの要件定義書」から抜け出せる。
+    </p>
+  </section>
+
+  <!-- ============ KAIZEN対比 ============ -->
+  <section>
+    <h2 class="section-title">KAIZENの先に、SESERAGIを</h2>
+    <p class="section-sub">
+      KAIZEN(改善)は、本来、一工程・一チームの部分最適ではなく、モノと情報の流れ全体を最適化する「全体最適」の思想である。
+      SESERAGI AGILEは、この全体最適という抽象的な目的を、"川"という具体的な構造として可視化し、設計するための補助線として位置づけられる。
+      対立する概念ではなく、同じ土台の上に立つ関係である。
+    </p>
+    <table class="kaizen-table">
+      <thead>
+        <tr><th>観点</th><th>KAIZEN(TPSの全体最適思想)</th><th>SESERAGI AGILE(その具体化)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>目指すもの</td>
+          <td><strong>全体最適</strong> — 一工程の稼働率ではなく、流れ全体のリードタイムとスループットを最適化する</td>
+          <td><strong>同じく全体最適</strong> — 対象を「湧水から使い継がれるまでの経路」という具体的な流れとして可視化する</td>
+        </tr>
+        <tr>
+          <td>判断基準</td>
+          <td>ムダ・ムラ・ムリの排除(造りすぎ・在庫・手待ち・運搬・加工そのもの・動作・不良手直し)</td>
+          <td>意図的還流・カスケード再利用・調整役・持続可能な流量、という4原則</td>
+        </tr>
+        <tr>
+          <td>典型的な失敗</td>
+          <td>部分最適の罠 — 1工程・1チームの効率化が、全体の在庫や停滞というムダを生む</td>
+          <td>還流の仕組みがなく、閉じた組織やチームの中で上流が現実から静かに乖離していく</td>
+        </tr>
+        <tr>
+          <td>鍵となる問い</td>
+          <td>「その改善は、全体のリードタイムを本当に縮めているか?」</td>
+          <td>「その学びは、組織の境界を越えて、誰の"次の水"として還元されるのか?」</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section>
+    <div class="cta">
+      <h2>止めない。溢れさせない。涸れさせない。</h2>
+      <p>
+        SESERAGI AGILEは、確立された方法論ではなく、ひとつの思考実験としての提案。<br>
+        あなたのチームに合った「汲み上げポンプ」と「調整役」は、どこにあるだろうか。
+      </p>
+      <span class="motto">せせらぎは、繰り返しても、淀まない。</span>
+    </div>
+  </section>
+
+  <!-- ============ 出典 ============ -->
+  <section class="sources">
+    <h2 class="section-title" style="font-size:1.2rem;">出典・参考資料(源兵衛川に関する事実確認)</h2>
+    <ol>
+      <li>環境省「地域における水環境改善に関する事例集」No.31 源兵衛川(PDF) — env.go.jp/water/junkan/case2/pdf/31.pdf</li>
+      <li>環境省 湧水保全ガイドライン 事例19「小浜池湧水他」(PDF) — env.go.jp/water/yusui/guideline/10.pdf</li>
+      <li>環境省 平成の名水百選「源兵衛川」— water-pub.env.go.jp</li>
+      <li>NPO法人グラウンドワーク三島「源兵衛川」「源兵衛川から水が消えた?」(2017) — gwmishima.jp</li>
+      <li>日本化学繊維協会 SDGs事例(東レ)「源兵衛川への冷却水放流と水辺環境改善への協力」— jcfa.gr.jp</li>
+      <li>静岡県公式サイト「源兵衛川」/ 静岡県企業局「工業用水道のご案内」— pref.shizuoka.jp</li>
+      <li>伊豆半島ジオパーク「楽寿園と源兵衛川」/ 伊豆ジオ遺産「源兵衛川」— izugeopark.org, izugeo13.sakuraweb.com</li>
+      <li>フジクリーン工業「よみがえる三島の水風景」— fujiclean.co.jp</li>
+      <li>東レ株式会社 採用サイト「三島工場」(1958年設立)— toray.co.jp</li>
+    </ol>
+    <p style="margin-top:14px;">
+      トヨタ生産方式(TPS)に関する記述は、大野耐一『トヨタ生産方式 — 脱規模の経営をめざして』(ダイヤモンド社, 1978)、
+      およびトヨタ自動車公式サイトの一般的な解説内容に基づく理解を参照しています。
+    </p>
+    <p>
+      アジャイル宣言・12の原則は agilemanifesto.org の公式日本語訳・英語原文に基づきます。
+      野中郁次郎・竹内弘高「The New New Product Development Game」(Harvard Business Review, 1986)、
+      Mary & Tom Poppendieck『Lean Software Development』(2003)、Scrum Guide(2020年版)についても、
+      それぞれの原文・公開情報を参照しています。
+    </p>
+    <p>
+      SECIモデルに関する記述は、野中郁次郎・竹内弘高『知識創造企業』(梅本勝博訳, 東洋経済新報社, 1996)、
+      Nonaka &amp; Konno「The Concept of "Ba"」(California Management Review, 1998)、
+      Jeff Sutherland「The Roots of Scrum」(JAOO, 2005講演資料)、
+      平鍋健児・野中郁次郎『アジャイル開発とスクラム』(翔泳社)に基づいています。
+    </p>
+    <div class="disclaimer">
+      本ページの「SESERAGI AGILE」は、既存の確立された開発手法・認定資格・団体を指すものではなく、
+      源兵衛川の事実に基づいた着想から個人が組み立てた思考実験・提案です。
+      源兵衛川に関する記述は上記出典に基づきますが、情報源間で表現の粒度が異なる箇所(小浜池涸渇の主因の説明など)があり、
+      本ページではより慎重な行政・事業者の一次資料の記述を優先しています。
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  SESERAGI AGILE — せせらぎアジャイル(提案)<br>
+  Inspired by 源兵衛川, Mishima, Shizuoka.
+</footer>
