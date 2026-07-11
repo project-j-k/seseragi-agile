@@ -2,52 +2,52 @@
 <meta name="description" content="ウォーターフォールでもなく、淀んだアジャイルでもなく。源兵衛川の水循環構造から着想を得た、涸れない開発の思想「SESERAGI AGILE」。">
 <style>
   :root{
-    --ink:#0b2b33;
-    --ink-soft:#3c5a63;
-    --paper:#f4faf9;
-    --paper-alt:#e9f4f2;
-    --line:#cfe3e0;
-    --deep:#08415c;
-    --teal:#1c7293;
-    --aqua:#3aaed8;
-    --aqua-soft:#a1e3e0;
-    --green:#4f9d69;
-    --gold:#c9a24b;
-    --card:#ffffff;
-    --shadow:0 12px 32px -18px rgba(8,65,92,.35);
-    --radius:18px;
+    --ink:#082e35;
+    --ink-soft:#3d6169;
+    --paper:#eef9f8;
+    --paper-alt:#dcf1ef;
+    --line:#c3e6e2;
+    --deep:#04425a;
+    --teal:#0f7ba0;
+    --aqua:#2bb0d9;
+    --aqua-soft:#a6e8e6;
+    --green:#3f9d78;
+    --gold:#c79a3e;
+    --card:rgba(255,255,255,.72);
+    --shadow:0 20px 45px -24px rgba(4,66,90,.4);
+    --radius:22px;
     --maxw:960px;
   }
   :root[data-theme="dark"]{
-    --ink:#e7f3f2;
-    --ink-soft:#aecdd0;
-    --paper:#081a20;
-    --paper-alt:#0c242c;
-    --line:#183842;
-    --deep:#bfe6f5;
-    --teal:#7fc3dd;
-    --aqua:#67c7e6;
-    --aqua-soft:#1c4a52;
-    --green:#8bd1a3;
-    --gold:#e0bd6f;
-    --card:#0e2830;
-    --shadow:0 12px 32px -18px rgba(0,0,0,.6);
+    --ink:#e4f5f4;
+    --ink-soft:#a7cdd0;
+    --paper:#051619;
+    --paper-alt:#082227;
+    --line:#123a41;
+    --deep:#bdeaf5;
+    --teal:#7fd4e8;
+    --aqua:#5cd0e6;
+    --aqua-soft:#134048;
+    --green:#7fd6ac;
+    --gold:#e6c274;
+    --card:rgba(10,35,40,.6);
+    --shadow:0 20px 45px -24px rgba(0,0,0,.65);
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --ink:#e7f3f2;
-      --ink-soft:#aecdd0;
-      --paper:#081a20;
-      --paper-alt:#0c242c;
-      --line:#183842;
-      --deep:#bfe6f5;
-      --teal:#7fc3dd;
-      --aqua:#67c7e6;
-      --aqua-soft:#1c4a52;
-      --green:#8bd1a3;
-      --gold:#e0bd6f;
-      --card:#0e2830;
-      --shadow:0 12px 32px -18px rgba(0,0,0,.6);
+      --ink:#e4f5f4;
+      --ink-soft:#a7cdd0;
+      --paper:#051619;
+      --paper-alt:#082227;
+      --line:#123a41;
+      --deep:#bdeaf5;
+      --teal:#7fd4e8;
+      --aqua:#5cd0e6;
+      --aqua-soft:#134048;
+      --green:#7fd6ac;
+      --gold:#e6c274;
+      --card:rgba(10,35,40,.6);
+      --shadow:0 20px 45px -24px rgba(0,0,0,.65);
     }
   }
   *{box-sizing:border-box;}
@@ -56,25 +56,39 @@
     margin:0;
     font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
     color:var(--ink);
-    background:var(--paper);
+    background:
+      radial-gradient(900px 500px at 8% 6%, color-mix(in srgb, var(--aqua-soft) 45%, transparent), transparent 60%),
+      radial-gradient(700px 480px at 96% 22%, color-mix(in srgb, var(--aqua-soft) 30%, transparent), transparent 55%),
+      radial-gradient(1000px 700px at 50% 100%, color-mix(in srgb, var(--teal) 12%, transparent), transparent 60%),
+      var(--paper);
+    background-attachment:fixed;
     line-height:1.85;
     overflow-x:hidden;
+    position:relative;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='140' viewBox='0 0 220 140'%3E%3Cg fill='none' stroke='%232bb0d9' stroke-opacity='0.10' stroke-width='1.4'%3E%3Cpath d='M-20 30 Q 35 10 90 30 T 200 30'/%3E%3Cpath d='M-20 70 Q 35 50 90 70 T 200 70'/%3E%3Cpath d='M-20 110 Q 35 90 90 110 T 200 110'/%3E%3C/g%3E%3C/svg%3E");
+    background-size:420px 260px;
   }
   img,svg{max-width:100%;}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px; position:relative;}
   a{color:var(--teal);}
 
   /* ---------- Hero ---------- */
   .hero{
     position:relative;
-    padding:96px 0 64px;
+    padding:104px 0 72px;
     background:
-      radial-gradient(1200px 500px at 20% -10%, var(--aqua-soft) 0%, transparent 60%),
+      radial-gradient(1200px 520px at 18% -15%, var(--aqua-soft) 0%, transparent 62%),
+      radial-gradient(700px 400px at 100% 0%, color-mix(in srgb, var(--gold) 18%, transparent), transparent 60%),
       linear-gradient(180deg, var(--paper-alt), var(--paper));
     overflow:hidden;
   }
   .hero-waves{
-    position:absolute; left:0; right:0; bottom:-2px; height:120px;
+    position:absolute; left:0; right:0; bottom:-2px; height:150px;
     display:block;
   }
   .kicker{
@@ -83,6 +97,7 @@
     color:var(--teal); text-transform:uppercase;
     background:var(--card); border:1px solid var(--line);
     padding:6px 14px; border-radius:999px; box-shadow:var(--shadow);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
   }
   .hero h1{
     font-size:clamp(2.2rem, 6vw, 3.6rem);
@@ -110,7 +125,9 @@
     display:flex; align-items:center; gap:12px;
   }
   h2.section-title::before{
-    content:""; width:34px; height:3px; background:var(--gold); display:inline-block; border-radius:2px;
+    content:""; width:30px; height:16px; display:inline-block; flex:0 0 auto;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='16' viewBox='0 0 30 16'%3E%3Cpath d='M0 8 Q 7.5 0 15 8 T 30 8' fill='none' stroke='%23c79a3e' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
   }
   .section-sub{color:var(--ink-soft); margin:0 0 40px; max-width:640px;}
   .divider{
@@ -125,6 +142,7 @@
   .compare .card{
     background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
     padding:26px 24px; box-shadow:var(--shadow);
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
   }
   .compare .card h3{margin:0 0 6px; font-size:1.05rem; color:var(--ink);}
   .compare .card .tag{font-size:12px; color:var(--ink-soft); letter-spacing:.06em;}
@@ -139,6 +157,12 @@
   .definition{
     background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
     padding:32px; box-shadow:var(--shadow); position:relative;
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  }
+  .definition::before{
+    content:""; position:absolute; top:0; left:24px; right:24px; height:2px;
+    background:linear-gradient(90deg, transparent, var(--aqua), transparent);
+    opacity:.7;
   }
   .definition .term{
     font-size:1.6rem; font-weight:800; color:var(--deep); letter-spacing:.02em;
@@ -150,6 +174,7 @@
   .river-flow{
     border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
     background:var(--card); box-shadow:var(--shadow);
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
   }
   .river-step{
     display:grid; grid-template-columns:64px 1fr; gap:18px;
@@ -167,7 +192,9 @@
   .river-step p{margin:0; color:var(--ink-soft); font-size:.95rem;}
   .fact-note{
     margin-top:36px; padding:18px 20px; border-left:3px solid var(--gold);
-    background:var(--paper-alt); border-radius:0 12px 12px 0; font-size:.9rem; color:var(--ink-soft);
+    background:color-mix(in srgb, var(--paper-alt) 70%, transparent); border-radius:0 12px 12px 0;
+    font-size:.9rem; color:var(--ink-soft);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
   }
 
   /* ---------- 原則 ---------- */
@@ -176,6 +203,7 @@
   .principle{
     background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
     padding:26px; box-shadow:var(--shadow); position:relative; padding-top:52px;
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
   }
   .principle .pnum{
     position:absolute; top:-14px; left:22px;
@@ -195,6 +223,7 @@
     background:var(--card); border:1px solid var(--line); border-radius:14px;
     padding:12px 13px; font-size:.78rem; color:var(--ink); box-shadow:var(--shadow);
     text-align:center; white-space:nowrap; flex:0 0 auto;
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
   }
   .loop-node small{font-size:.76em; display:block; margin-top:2px;}
   .loop-arrow{color:var(--aqua); font-size:1.1rem; padding:0 6px; flex:0 0 auto;}
@@ -217,8 +246,12 @@
 
   /* ---------- CTA ---------- */
   .cta{
-    text-align:center; background:linear-gradient(160deg, var(--deep), var(--teal));
-    border-radius:24px; padding:56px 32px; color:#fff;
+    text-align:center; color:#fff; position:relative; overflow:hidden;
+    border-radius:28px; padding:56px 32px;
+    background:
+      radial-gradient(600px 300px at 15% 0%, rgba(255,255,255,.16), transparent 60%),
+      radial-gradient(500px 260px at 100% 100%, color-mix(in srgb, var(--gold) 35%, transparent), transparent 60%),
+      linear-gradient(160deg, var(--deep), var(--teal));
   }
   .cta h2{margin:0 0 12px; font-size:clamp(1.4rem,3vw,2rem);}
   .cta p{color:#dff2f5; max-width:520px; margin:0 auto 8px;}
@@ -245,6 +278,7 @@
 </style>
 
 <div class="hero">
+  <div class="hero-shimmer"></div>
   <div class="wrap">
     <span class="kicker">a proposed development philosophy</span>
     <h1>SESERAGI AGILE
@@ -263,9 +297,11 @@
       <span class="badge">📜 KAIZENに続く、日本発の開発思想(提案)</span>
     </div>
   </div>
-  <svg class="hero-waves" viewBox="0 0 1440 120" preserveAspectRatio="none">
-    <path fill="var(--aqua-soft)" opacity="0.6" d="M0,64 C240,110 480,20 720,56 C960,92 1200,30 1440,64 L1440,120 L0,120 Z"/>
-    <path fill="var(--paper)" d="M0,90 C240,50 480,120 720,80 C960,40 1200,110 1440,80 L1440,120 L0,120 Z"/>
+  <svg class="hero-waves" viewBox="0 0 1440 150" preserveAspectRatio="none">
+    <path fill="var(--gold)" opacity="0.12" d="M0,40 C240,90 480,10 720,46 C960,82 1200,20 1440,54 L1440,150 L0,150 Z"/>
+    <path fill="var(--aqua-soft)" opacity="0.55" d="M0,74 C240,120 480,40 720,76 C960,112 1200,50 1440,84 L1440,150 L0,150 Z"/>
+    <path fill="var(--aqua)" opacity="0.18" d="M0,96 C240,66 480,126 720,96 C960,66 1200,126 1440,96 L1440,150 L0,150 Z"/>
+    <path fill="var(--paper)" d="M0,110 C240,80 480,140 720,104 C960,68 1200,132 1440,100 L1440,150 L0,150 Z"/>
   </svg>
 </div>
 
